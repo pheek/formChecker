@@ -1,0 +1,52 @@
+/**
+ * css for input form check.
+ * 2018-10-18 φ
+ */
+
+.required {
+	color: red;
+}
+
+.active {
+	border-color: blue ;
+	border-width: 2px  ;
+	border-style: solid;
+}
+
+.passive {
+	border-color: black;
+	border-width: 1px  ;
+	padding     : 2px  ;
+	border-style: solid;
+}
+
+.fc_err_fld, .fc_ok_fld, .fc_part_fld {
+	border-radius: 3px;
+	box-shadow: 2px 2px #cccccccc;
+}
+
+.fc_err_fld, .fc_err_lbl, .fc_part_lbl {
+	color: red;
+}
+
+.fc_err_fld {
+	background-color: #ffd8d8;
+}
+
+.fc_ok_lbl {
+	color: black;
+}
+
+.fc_part_fld {
+	color: #03a;
+	background-color: #ccf;
+}
+
+.fc_ok_fld {
+	color: green;
+	background-color: #fff;
+}
+
+.infoLabel {
+	color: red;
+}
