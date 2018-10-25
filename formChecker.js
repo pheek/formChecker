@@ -4,8 +4,9 @@
  ***********************************************/
 var FC_ALL_FORMS = new Array();
 
-// Global Function which is called from all
-// Key- and Blur-Events an any registered field.
+// Globale Funktion, welche alle Felder prüft.
+// Diese wird von allen registrierten Listenern auf allen
+// Eingabefeldern aufgerufen.
 function checkAllFields(evt, formID) {
 	var formChecker = FC_ALL_FORMS[formID];
 	formChecker.checkAllFields(evt);
@@ -22,10 +23,9 @@ function NOT_REQUIRED(fldValue) {
 
 /**
  * REQUIRED sagt, dass ein Feld nicht leer sein darf.
- * Achtung: Nur Leerschläge (white spaces) gelten auch als leer.
+ * Achtung: Nur Leerschläge (white spaces/tabs/...) gelten auch als leer.
  */
 function REQUIRED(fldValue) {
-		//window.alert("Testing name for OK");
 	if("" == fldValue.trim()) {
 		return("ERR");
 	}
@@ -33,6 +33,17 @@ function REQUIRED(fldValue) {
 }
 
 
+/**
+ * + Die "formID" wird verwendet, damit für jedes Formular eine eigene
+ *   Prüfung möglich ist.
+ * + submitButtonID wird verwendet, um den Submit-Button zu "disablen",
+ *   falls eine Eingabe noch fehlerhaft ist.
+ * + infoLabelID ist die ID eines Paragraphen (oder generell eines HTML-Elements).
+ *   In dieses "infoLabel" wird der Fehlertext hineingeschrieben.
+ * + infoLabelText gibt den Text an, der angezeigt wird, wenn ein oder
+ *   mehrere Felder noch nicht korrekt sind. Der Platzhalter "{FIELDS}"
+ *   wird dabei durch die Namen der fehlerhaften Felder ersetzt.
+ */
 function CheckFields(formID, submitButtonID, infoLabelID, infoLabelText) {
 	this.formID          = formID        ;
 	this.submitButtonID  = submitButtonID;
@@ -43,6 +54,12 @@ function CheckFields(formID, submitButtonID, infoLabelID, infoLabelText) {
 }
 
 
+/**
+ * Diese Funktion schreibt einen Meldungstext ins infoLabel. Dieser Text
+ * zeit an, welche Felder noch fehlerhaft sind. Dabei wird der "infoLabelText" aus
+ * dem Konstruktor verwendet. Die Felder werden durch Kommata getrennt,
+ * wobei die letzten beiden Felder durch das Wort " und " getrennt werden. 
+ */
 CheckFields.prototype.createStatusMsg =
 	function(missingFieldsArray) {
 		var lblPara = document.getElementById(this.infoLabelID);
@@ -75,8 +92,8 @@ CheckFields.prototype.checkAllFields =
 				console.log("event" + evt + " type:" + evt.type);
 				id = evt.originalTarget.id;
 			} else {
-				// Problem: paste-Event erscheint, BEVOR der Text im Feld
-				// ist. Mit SetTimeout 20 (20ms) ist der Text danach aber
+				// Problem: paste-Event wird geworfen, BEVOR der Text im Feld
+				// eingetragen wird. Mit SetTimeout 20 (20ms) ist der Text danach aber
 				// im Feld und kann geprüft werden.
 				setTimeout('checkAllFields("", "'+this.formID+'")', 20);
 			}
@@ -161,7 +178,7 @@ CheckFields.prototype.addField =
 		this.registerListeners(nextField);
 	};
 
-
+/* debug only:
 CheckFields.prototype.debugEchoList =
 	function () {
 		var i;
@@ -172,3 +189,4 @@ CheckFields.prototype.debugEchoList =
 		}
 		window.alert(str);
 	};
+*/

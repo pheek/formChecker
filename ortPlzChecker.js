@@ -4,22 +4,25 @@
  ***********************************************/
 
 /** 
- *  Registriere alle Felder.
- *  Felder, welche nicht geprüft werden müssen könn einfach die Funktion "notRequired" angeben; 
- *  solche Felder werden dann auch gleich formattiert (Fokus, Ränder, Farben, ...).
+ *  Registriere alle Felder des Input Formulars, welche geprüft werden müssen.
+ *
+ *  Felder, welche nicht geprüft werden müssen, können einfach die Funktion "NOT_REQUIRED" angeben; 
+ *  solche Felder werden dann auch gleich formattiert wie die geprüften Felder (Fokus, Ränder, Farben, ...).
+ *  Würde man die "not required" Felder nicht registrieren, würde das Formular natürlich genau gleich 
+ *  funktionieren, jedoch müsste das CSS so angepasst werden, dass die Felder ergonomisch daher kommen.
  * 
- *  Die Funktion addField erwartet:
+ *  Die Funktion addField() erwartet:
  *   1. id des <input>-Feldes
  *   2. id des Label Feldes, das das Feld beschreibt. Dies wird rot markiert, wenn
  *      die Eingabe fehlt.
- *   3. Lesbarer Name des Feldes, damit die Meldung über fehlende oder Fehlerhafte
+ *   3. Lesbarer Name des Feldes, damit die Meldung über fehlende oder fehlerhafte
  *      Eingaben gemacht werden kann.
  *   4. Testfunktion für das Feld.
  *      Die Testfunktion NOT_REQUIRED liefert immer "OK".
  *
  *      Felder welche nicht leer sein dürfen verwenden die Testfunktion "REQUIRED".
  *
- *      Alle anderen Funktionen liefern 
+ *      Alle anderen Funktionen liefern
  *             * "OK"  , sobald die Eingabe korrekt ist,
  *             * "ERR" , wenn die Eingabe Fehlerhafte Zeichen enthält und
  *             * "PART", die Eingabe ist zwar korrekt, aber noch nicht vollständig.
@@ -34,11 +37,12 @@ function registerFields() {
 	cf.addField(    'ortFld',     'ortLbl', 'Ort'         , 'testOrtFld'  );
 	// Folgender Aufruf ist da,
 	// damit die Felder gleich beim Laden des Formulars markiert werden:
-	checkAllFields("", 'formID1');
+	cf.checkAllFields("");
 }
 
 /**
- * Testfunktionen erhalten als Parameter den aktuellen Wert des entsprechenden Feldes.
+ * Testfunktionen (Feldprüfungsfunktionen) erhalten als Parameter 
+ * den aktuellen Wert des entsprechenden Feldes.
  * Sie müssen einen der folgenden Rückgabewerte aufweisen:
  *    
  *       OK    -> this field is ok
