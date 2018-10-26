@@ -1,6 +1,6 @@
 /***********************************************
  * Autor: philipp freimann / phi@freimann.eu
- * Datum: März 2009
+ * Datum: Okt. 2018
  ***********************************************/
 var FC_ALL_FORMS = new Array();
 
@@ -38,7 +38,8 @@ function REQUIRED(fldValue) {
  *   Prüfung möglich ist.
  * + submitButtonID wird verwendet, um den Submit-Button zu "disablen",
  *   falls eine Eingabe noch fehlerhaft ist.
- * + infoLabelID ist die ID eines Paragraphen (oder generell eines HTML-Elements).
+ * + infoLabelID ist die ID eines Paragraphen
+ *   (oder generell eines HTML-Elements).
  *   In dieses "infoLabel" wird der Fehlertext hineingeschrieben.
  * + infoLabelText gibt den Text an, der angezeigt wird, wenn ein oder
  *   mehrere Felder noch nicht korrekt sind. Der Platzhalter "{FIELDS}"
@@ -58,7 +59,7 @@ function CheckFields(formID, submitButtonID, infoLabelID, infoLabelText) {
  * Diese Funktion schreibt einen Meldungstext ins infoLabel. Dieser Text
  * zeit an, welche Felder noch fehlerhaft sind. Dabei wird der "infoLabelText" aus
  * dem Konstruktor verwendet. Die Felder werden durch Kommata getrennt,
- * wobei die letzten beiden Felder durch das Wort " und " getrennt werden. 
+ * wobei die letzten beiden Felder durch das Wort " und " getrennt werden.
  */
 CheckFields.prototype.createStatusMsg =
 	function(missingFieldsArray) {
@@ -159,7 +160,7 @@ CheckFields.prototype.handleSingleField =
 CheckFields.prototype.registerListeners =
 	function(field) {
 		var ele = document.getElementById(field.fieldID);
-		var fctName = 'checkAllFields(event, "'+this.formID+'");';	
+		var fctName = 'checkAllFields(event, "'+this.formID+'");';
 		ele.setAttribute('onpaste' , fctName);
 		ele.setAttribute('onkeyup' , fctName);
 		ele.setAttribute('onblur'  , fctName);
@@ -171,7 +172,7 @@ CheckFields.prototype.registerListeners =
 CheckFields.prototype.addField =
 	function (fieldID, lblID, feldNameLesbar, testFieldFct) {
 		var nextField = {'fieldID'       : fieldID       ,
-										 'lblID'         : lblID         ,
+		                 'lblID'         : lblID         ,
 		                 'feldNameLesbar': feldNameLesbar,
 		                 'testFieldFct'  : testFieldFct  };
 		this.fieldList[fieldID] =  nextField;

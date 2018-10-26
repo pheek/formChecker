@@ -44,10 +44,10 @@ function registerFields() {
  * Testfunktionen (Feldprüfungsfunktionen) erhalten als Parameter 
  * den aktuellen Wert des entsprechenden Feldes.
  * Sie müssen einen der folgenden Rückgabewerte aufweisen:
- *    
- *       OK    -> this field is ok
- *       PART  -> Entering. Is ok as part of OK
- *       ERR   -> Error: Field not OK
+ *
+ *    OK    -> this field is ok
+ *    PART  -> Entering. Is ok as part of OK
+ *    ERR   -> Error: Field not OK
  */
 
 
