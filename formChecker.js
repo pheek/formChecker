@@ -1,6 +1,8 @@
 /***********************************************
  * Autor: philipp freimann / phi@freimann.eu
  * Datum: Okt. 2018
+ *
+ * Full example see: github.com/pheek/formChecker
  ***********************************************/
 var FC_ALL_FORMS = new Array();
 
@@ -30,6 +32,41 @@ function REQUIRED(fldValue) {
 		return("ERR");
 	}
 	return "OK";
+}
+
+/**
+ * Teste ob E-Mailadresse im gültigem Format
+ * -----------------------------------------
+ * - Gültig sind Ziffern, Buchstaben, Underscores ("_" = Bodenstrich) und das Minuszeichen.
+ * - Ebenso muss eine E-Mail nach dem letzten Punkt zwei Zeichen enthalten.
+ * - Ein Punkt ist minimal nach dem @ Zeichen vorgesehen.
+ * - E-Mails dürfen in spitzen Klammern  angegeben werden. Bsp.:  <abc@dada.net>
+ * - Auf die zusammengesetzte Form mit den Anführungszeichen (") wurde noch
+ *   verzichtet. Bsp.:   "Hans Muster" <hans.muster@purplewin.ch>
+ *   Dies könnte noch als Option hinzugefügt werden.r
+ */
+function TEST_EMAIL(fldValue) {
+	var mail = fldValue.trim();
+	// zwei Punkte hintereinander nach dem @:
+	if(/^.*@.*\.\..*$/.test(mail)) {return "ERR";}
+
+	if(/^<$/                                   .test(mail)) { return "PART"; }
+	if(/^<?[\._\-0-9a-zA-Z]+$/                 .test(mail)) { return "PART"; }
+	if(/^<?[\._\-0-9a-zA-Z]+\@$/               .test(mail)) { return "PART"; }
+	if(/^<?[\._\-0-9a-zA-Z]+\@[0-9a-zA-Z_\-]+$/.test(mail)) { return "PART"; }
+
+	// alles ok, aber endet auf Punkt:
+	if(/^<?[\._\-0-9a-zA-Z]+\@[0-9a-zA-Z_\-]+[0-9a-zA-Z\._\-]+\.$/            .test(mail)) { return "PART"; }
+	// alles ok, aber begann mit "<", somit muss es auch mit ">" enden:
+	if(/^<[\._\-0-9a-zA-Z]+\@[0-9a-zA-Z_\-]+[0-9a-zA-Z\._\-]+[0-9a-zA-Z_\-]+$/.test(mail)) { return "PART"; }
+	// alles ok, aber hat erst ein Buchstabe am Schluss
+	if( /^[\._\-0-9a-zA-Z]+\@([0-9a-zA-Z_\-]+\.)+[0-9a-zA-Z_\-]$/             .test(mail)) { return "PART"; }
+
+	// Alles korrekt inkl. zwei Buchstaben am Schluss. einmal mit <> einmal ohne
+	if(/^<[\._\-0-9a-zA-Z]+\@([0-9a-zA-Z_\-]+\.)+[0-9a-zA-Z_\-]{2,50}>$/      .test(mail)) { return "OK"  ; }
+	if( /^[\._\-0-9a-zA-Z]+\@([0-9a-zA-Z_\-]+\.)+[0-9a-zA-Z_\-]{2,50}$/       .test(mail)) { return "OK"  ; }
+
+	return "ERR";
 }
 
 

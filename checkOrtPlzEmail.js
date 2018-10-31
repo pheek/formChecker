@@ -26,28 +26,30 @@
  *             * "OK"  , sobald die Eingabe korrekt ist,
  *             * "ERR" , wenn die Eingabe Fehlerhafte Zeichen enthält und
  *             * "PART", die Eingabe ist zwar korrekt, aber noch nicht vollständig.
- */  
+ */
 
 function registerFields() {
 	var cf = new CheckFields("formID1", "submitID1", 'infoLabel', 'Bitte {FIELDS} korrekt eingeben.');
-	
+
 	cf.addField(   'nameFld',    'nameLbl', 'Name'        , 'REQUIRED'    );
 	cf.addField('vornameFld', 'vornameLbl', 'Vorname'     , 'NOT_REQUIRED');
 	cf.addField(    'plzFld',     'plzLbl', 'Postleitzahl', 'testPLZFld'  );
 	cf.addField(    'ortFld',     'ortLbl', 'Ort'         , 'testOrtFld'  );
+	cf.addField(  'emailFld',   'emailLbl', 'E-Mail'      , 'TEST_EMAIL'  );
 	// Folgender Aufruf ist da,
 	// damit die Felder gleich beim Laden des Formulars markiert werden:
 	cf.checkAllFields("");
 }
 
+
 /**
- * Testfunktionen (Feldprüfungsfunktionen) erhalten als Parameter 
+ * Testfunktionen (Feldprüfungsfunktionen) erhalten als Parameter
  * den aktuellen Wert des entsprechenden Feldes.
  * Sie müssen einen der folgenden Rückgabewerte aufweisen:
  *
- *    OK    -> this field is ok
- *    PART  -> Entering. Is ok as part of OK
- *    ERR   -> Error: Field not OK
+ *    OK    -> this field is ok.
+ *    PART  -> Entering. Is ok as part of the input.
+ *    ERR   -> Error: Field not OK.
  */
 
 
