@@ -45,26 +45,28 @@ function REQUIRED(fldValue) {
  *   verzichtet. Bsp.:   "Hans Muster" <hans.muster@purplewin.ch>
  *   Dies könnte noch als Option hinzugefügt werden.r
  */
+
 function TEST_EMAIL(fldValue) {
 	var mail = fldValue.trim();
+	
 	// zwei Punkte hintereinander nach dem @:
 	if(/^.*@.*\.\..*$/.test(mail)) {return "ERR";}
 
 	if(/^<$/                                   .test(mail)) { return "PART"; }
-	if(/^<?[\._\-0-9a-zA-Z]+$/                 .test(mail)) { return "PART"; }
-	if(/^<?[\._\-0-9a-zA-Z]+\@$/               .test(mail)) { return "PART"; }
-	if(/^<?[\._\-0-9a-zA-Z]+\@[0-9a-zA-Z_\-]+$/.test(mail)) { return "PART"; }
+	if(/^<?[\._\-\u00C0-\u017F0-9a-zA-Z]+$/                 .test(mail)) { return "PART"; }
+	if(/^<?[\._\-\u00C0-\u017F0-9a-zA-Z]+\@$/               .test(mail)) { return "PART"; }
+	if(/^<?[\._\-\u00C0-\u017F0-9a-zA-Z]+\@[\u00C0-\u017F0-9a-zA-Z_\-]+$/.test(mail)) { return "PART"; }
 
 	// alles ok, aber endet auf Punkt:
-	if(/^<?[\._\-0-9a-zA-Z]+\@[0-9a-zA-Z_\-]+[0-9a-zA-Z\._\-]+\.$/            .test(mail)) { return "PART"; }
+	if(/^<?[\._\-\u00C0-\u017F0-9a-zA-Z]+\@[\u00C0-\u017F0-9a-zA-Z_\-]+[\u00C0-\u017F0-9a-zA-Z\._\-]+\.$/            .test(mail)) { return "PART"; }
 	// alles ok, aber begann mit "<", somit muss es auch mit ">" enden:
-	if(/^<[\._\-0-9a-zA-Z]+\@[0-9a-zA-Z_\-]+[0-9a-zA-Z\._\-]+[0-9a-zA-Z_\-]+$/.test(mail)) { return "PART"; }
+	if(/^<[\._\-\u00C0-\u017F0-9a-zA-Z]+\@[\u00C0-\u017F0-9a-zA-Z_\-]+[\u00C0-\u017F0-9a-zA-Z\._\-]+[\u00C0-\u017F0-9a-zA-Z_\-]+$/.test(mail)) { return "PART"; }
 	// alles ok, aber hat erst ein Buchstabe am Schluss
-	if( /^[\._\-0-9a-zA-Z]+\@([0-9a-zA-Z_\-]+\.)+[0-9a-zA-Z_\-]$/             .test(mail)) { return "PART"; }
+	if( /^[\._\-\u00C0-\u017F0-9a-zA-Z]+\@([\u00C0-\u017F0-9a-zA-Z_\-]+\.)+[\u00C0-\u017F0-9a-zA-Z_\-]$/             .test(mail)) { return "PART"; }
 
 	// Alles korrekt inkl. zwei Buchstaben am Schluss. einmal mit <> einmal ohne
-	if(/^<[\._\-0-9a-zA-Z]+\@([0-9a-zA-Z_\-]+\.)+[0-9a-zA-Z_\-]{2,50}>$/      .test(mail)) { return "OK"  ; }
-	if( /^[\._\-0-9a-zA-Z]+\@([0-9a-zA-Z_\-]+\.)+[0-9a-zA-Z_\-]{2,50}$/       .test(mail)) { return "OK"  ; }
+	if(/^<[\._\-\u00C0-\u017F0-9a-zA-Z]+\@([\u00C0-\u017F0-9a-zA-Z_\-]+\.)+[\u00C0-\u017F0-9a-zA-Z_\-]{2,}>$/      .test(mail)) { return "OK"  ; }
+	if( /^[\._\-\u00C0-\u017F0-9a-zA-Z]+\@([\u00C0-\u017F0-9a-zA-Z_\-]+\.)+[\u00C0-\u017F0-9a-zA-Z_\-]{2,}$/       .test(mail)) { return "OK"  ; }
 
 	return "ERR";
 }
