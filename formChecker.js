@@ -43,31 +43,29 @@ function REQUIRED(fldValue) {
  * - E-Mails dürfen in spitzen Klammern  angegeben werden. Bsp.:  <abc@dada.net>
  * - Auf die zusammengesetzte Form mit den Anführungszeichen (") wurde noch
  *   verzichtet. Bsp.:   "Hans Muster" <hans.muster@purplewin.ch>
- *   Dies könnte noch als Option hinzugefügt werden.r
+ *   Dies könnte noch als Option hinzugefügt werden.
  */
 
 function TEST_EMAIL(fldValue) {
 	var mail = fldValue.trim();
-	
-	// zwei Punkte hintereinander nach dem @:
+
+	// Behandle offensichtliche Fehler:
+	// Leerstring ist nicht OK:
+	if("" == mail) {return "ERR";}
+	// Zwei Punkte hintereinander nach dem @:
 	if(/^.*@.*\.\..*$/.test(mail)) {return "ERR";}
 
-	if(/^<$/                                   .test(mail)) { return "PART"; }
-	if(/^<?[\._\-\u00C0-\u017F0-9a-zA-Z]+$/                 .test(mail)) { return "PART"; }
-	if(/^<?[\._\-\u00C0-\u017F0-9a-zA-Z]+\@$/               .test(mail)) { return "PART"; }
-	if(/^<?[\._\-\u00C0-\u017F0-9a-zA-Z]+\@[\u00C0-\u017F0-9a-zA-Z_\-]+$/.test(mail)) { return "PART"; }
-
-	// alles ok, aber endet auf Punkt:
-	if(/^<?[\._\-\u00C0-\u017F0-9a-zA-Z]+\@[\u00C0-\u017F0-9a-zA-Z_\-]+[\u00C0-\u017F0-9a-zA-Z\._\-]+\.$/            .test(mail)) { return "PART"; }
-	// alles ok, aber begann mit "<", somit muss es auch mit ">" enden:
-	if(/^<[\._\-\u00C0-\u017F0-9a-zA-Z]+\@[\u00C0-\u017F0-9a-zA-Z_\-]+[\u00C0-\u017F0-9a-zA-Z\._\-]+[\u00C0-\u017F0-9a-zA-Z_\-]+$/.test(mail)) { return "PART"; }
-	// alles ok, aber hat erst ein Buchstabe am Schluss
-	if( /^[\._\-\u00C0-\u017F0-9a-zA-Z]+\@([\u00C0-\u017F0-9a-zA-Z_\-]+\.)+[\u00C0-\u017F0-9a-zA-Z_\-]$/             .test(mail)) { return "PART"; }
-
+	// Die folgenden Fälle sind OK
 	// Alles korrekt inkl. zwei Buchstaben am Schluss. einmal mit <> einmal ohne
-	if(/^<[\._\-\u00C0-\u017F0-9a-zA-Z]+\@([\u00C0-\u017F0-9a-zA-Z_\-]+\.)+[\u00C0-\u017F0-9a-zA-Z_\-]{2,}>$/      .test(mail)) { return "OK"  ; }
-	if( /^[\._\-\u00C0-\u017F0-9a-zA-Z]+\@([\u00C0-\u017F0-9a-zA-Z_\-]+\.)+[\u00C0-\u017F0-9a-zA-Z_\-]{2,}$/       .test(mail)) { return "OK"  ; }
+	// Top-Level Domain enthält weder '_' noch '-'
+	if( /^[\._\-9a-zA-Z]+\@([9a-zA-Z_\-]+\.)+[9a-zA-Z]{2,}$/ .test(mail)) { return "OK"  ; }
+	// auch mit Spitzen Klammern ok:
+	if(/^<[\._\-9a-zA-Z]+\@([9a-zA-Z_\-]+\.)+[9a-zA-Z]{2,}>$/.test(mail)) { return "OK"  ; }
 
+	// Als Teil OK, also OK während der Eingabe
+	if(/^<?[\._\-9a-zA-Z]*(\@[9a-zA-Z_\-\.]*)?$/.test(mail)) { return "PART"; }
+
+	// Alles andere wird als falsch angesehen
 	return "ERR";
 }
 
