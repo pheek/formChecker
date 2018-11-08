@@ -6,9 +6,15 @@
  ***********************************************/
 var FC_ALL_FORMS = new Array();
 
-// Globale Funktion, welche alle Felder prüft.
-// Diese wird von allen registrierten Listenern auf allen
-// Eingabefeldern aufgerufen.
+/** 
+ * checkAllFields ist eine globale Funktion, welche alle Felder prüft.
+ * Die Funktion muss von allen Listeners (hooks, onXYZ-Funktionen)
+ * aufgerufen werden können.
+ * Auf allen Eingabefeldern wird diese Funktion für 
+ * diverse Listener registriert.
+ * Die registrierten Listener sind in der Funktion 
+ * CheckFields.registerListeners() zu sehen.
+ */
 function checkAllFields(evt, formID) {
 	var formChecker = FC_ALL_FORMS[formID];
 	formChecker.checkAllFields(evt);
@@ -52,6 +58,7 @@ function TEST_EMAIL(fldValue) {
 	// Behandle offensichtliche Fehler:
 	// Leerstring ist nicht OK:
 	if("" == mail) {return "ERR";}
+	
 	// Zwei Punkte hintereinander nach dem @:
 	if(/^.*@.*\.\..*$/.test(mail)) {return "ERR";}
 
@@ -63,8 +70,9 @@ function TEST_EMAIL(fldValue) {
 	if(/^<[-\._0-9a-zA-Z]+\@([-_0-9a-zA-Z]+\.)+[0-9a-zA-Z]{2,}>$/.test(mail)) { return "OK"  ; }
 
 	// auch mit Name voran in "" eingeschlossen ok:
-//	if(/^(\u0022[^\u0022]+\u0022)?<[-\._0-9a-zA-Z]+\@([-_0-9a-zA-Z]+\.)+[0-9a-zA-Z]{2,}>$/.test(mail)) { return "OK"  ; }
-	
+  if(/^(\u0022[^\u0022]+\u0022)? *<[-\._0-9a-zA-Z]+\@([-_0-9a-zA-Z]+\.)+[0-9a-zA-Z]{2,}>$/.test(mail)) { return "OK"  ; }
+
+	  if(/^(\u0022[^\u0022]+\u0022)?( *(<([-\._0-9a-zA-Z]+(\@(([-_0-9a-zA-Z]+\.?)+([0-9a-zA-Z]+)?)?)?)?)?)?$/.test(mail)) { return "PART"  ; }
 
 	// Als Teil OK, also OK während der Eingabe
 	if(/^<?[-\._0-9a-zA-Z]*(\@[-\._0-9a-zA-Z]*)?$/.test(mail)) { return "PART"; }
@@ -94,6 +102,32 @@ function CheckFields(formID, submitButtonID, infoLabelID, infoLabelText) {
 	this.fieldList       = new Array()   ;
 	FC_ALL_FORMS[formID] = this          ;
 }
+
+
+/**
+ * 'registerField' registriert ein Feld für die Prüfung des Inhaltes.
+ * Bei jeder Veränderung des Inhaltes (onChange, onKeyup, ...)
+ * werden alle hiermit registrierten Felder geprüft, ob der 
+ * Inhalt korrekt ist.
+ * @fieldID: die ID des <input>-Feldes.
+ * @lblID  : die ID des Labels, das neben dem <input> Feld steht.
+ *           Dieses Feld kann somit die Farbe ändern und dem
+ *           Anwender klar machen, wenn noch eine Eingabe nicht
+ *           korrekt ist.
+ * @feldNameLesbar: Der Name des Feldes in lesbarer Form für den
+ *                  Anwender. Dies ist wichtig für die Meldung
+ *                  beim Submit-Button: "Bitte ... korrekt eingeben."
+ * @testFieldFct: Die Funktion, welche das Feld auf Korrektheit prüft.
+ */
+CheckFields.prototype.registerField =
+	function (fieldID, lblID, feldNameLesbar, testFieldFct) {
+		var nextField = {'fieldID'       : fieldID       ,
+		                 'lblID'         : lblID         ,
+		                 'feldNameLesbar': feldNameLesbar,
+		                 'testFieldFct'  : testFieldFct  };
+		this.fieldList[fieldID] =  nextField;
+		this.registerListeners(nextField);
+	};
 
 
 /**
@@ -168,12 +202,21 @@ CheckFields.prototype.colorizeLbl =
 		lbl.setAttribute('class', className);
 	};
 
+var dbgOld = '';
 
 CheckFields.prototype.handleSingleField =
 	function (currentField, currentLbl, activeFieldID) {
 		var okFctName = this.fieldList[currentField]['testFieldFct'];
 		var fld = document.getElementById(currentField);
 		var fldValue = fld.value;
+		fldValue = fldValue.replace(/\\/g, '\\\\');
+		fldValue = fldValue.replace(/"/g, '\\"');
+		//		var okFct = okFctName + '("' + fldValue + '")';
+		//		var debugS = '\\"Hallo\\"';
+		if(dbgOld != fldValue && ("" != fldValue)) {
+			//window.alert(fldValue);
+			dbgOld = fldValue;
+		}
 		var okFct = okFctName + '("' + fldValue + '")';
 		var resultState = eval(okFct);
 		var apString = 'passive';
@@ -209,26 +252,3 @@ CheckFields.prototype.registerListeners =
 		ele.setAttribute('onfocus' , fctName);
 	};
 
-
-CheckFields.prototype.addField =
-	function (fieldID, lblID, feldNameLesbar, testFieldFct) {
-		var nextField = {'fieldID'       : fieldID       ,
-		                 'lblID'         : lblID         ,
-		                 'feldNameLesbar': feldNameLesbar,
-		                 'testFieldFct'  : testFieldFct  };
-		this.fieldList[fieldID] =  nextField;
-		this.registerListeners(nextField);
-	};
-
-/* debug only:
-CheckFields.prototype.debugEchoList =
-	function () {
-		var i;
-		var str = "";
-
-		for(fld in this.fieldList) {
-			str = str + this.fieldList[fld].fieldID + "(isOKFct: "+this.fieldList[fld]['testFieldFct']+")";
-		}
-		window.alert(str);
-	};
-*/

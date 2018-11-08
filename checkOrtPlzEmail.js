@@ -11,7 +11,7 @@
  *  Würde man die "not required" Felder nicht registrieren, würde das Formular natürlich genau gleich 
  *  funktionieren, jedoch müsste das CSS so angepasst werden, dass die Felder ergonomisch daher kommen.
  * 
- *  Die Funktion addField() erwartet:
+ *  Die Funktion registerField() erwartet:
  *   1. id des <input>-Feldes
  *   2. id des Label Feldes, das das Feld beschreibt. Dies wird rot markiert, wenn
  *      die Eingabe fehlt.
@@ -31,11 +31,11 @@
 function registerFields() {
 	var cf = new CheckFields("formID1", "submitID1", 'infoLabel', 'Bitte {FIELDS} korrekt eingeben.');
 
-	cf.addField(   'nameFld',    'nameLbl', 'Name'        , 'REQUIRED'    );
-	cf.addField('vornameFld', 'vornameLbl', 'Vorname'     , 'NOT_REQUIRED');
-	cf.addField(    'plzFld',     'plzLbl', 'Postleitzahl', 'testPLZFld'  );
-	cf.addField(    'ortFld',     'ortLbl', 'Ort'         , 'testOrtFld'  );
-	cf.addField(  'emailFld',   'emailLbl', 'E-Mail'      , 'TEST_EMAIL'  );
+	cf.registerField(   'nameFld',    'nameLbl', 'Name'        , 'REQUIRED'    );
+	cf.registerField('vornameFld', 'vornameLbl', 'Vorname'     , 'NOT_REQUIRED');
+	cf.registerField(    'plzFld',     'plzLbl', 'Postleitzahl', 'testPLZFld'  );
+	cf.registerField(    'ortFld',     'ortLbl', 'Ort'         , 'testOrtFld'  );
+	cf.registerField(  'emailFld',   'emailLbl', 'E-Mail'      , 'TEST_EMAIL'  );
 	// Folgender Aufruf ist da,
 	// damit die Felder gleich beim Laden des Formulars markiert werden:
 	cf.checkAllFields("");
