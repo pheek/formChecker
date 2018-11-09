@@ -22,7 +22,7 @@
 
 .fc_err_fld, .fc_ok_fld, .fc_part_fld {
 	border-radius: 3px;
-	box-shadow: 2px 2px #cccccccc;
+	box-shadow: 2px 2px #cccc;
 }
 
 .fc_err_fld, .fc_err_lbl, .fc_part_lbl {
