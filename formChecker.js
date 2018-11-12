@@ -57,7 +57,7 @@ function TEST_EMAIL(fldValue) {
 
 	// Behandle offensichtliche Fehler:
 	// Leerstring ist nicht OK:
-	if("" == mail) {return "ERR";}
+	if('' == mail) {return "ERR";}
 	
 	// Zwei Punkte hintereinander nach dem @:
 	if(/^.*@.*\.\..*$/.test(mail)) {return "ERR";}
@@ -178,7 +178,7 @@ CheckFields.prototype.checkAllFields =
 		for(fld in this.fieldList) {
 			var lblID = this.fieldList[fld]['lblID'];
 			var sup = this.handleSingleField(fld, lblID, id);
-			if("" != sup) {
+			if('' != sup) {
 				missingFieldsArr.push(sup);
 				error = true;
 			}
@@ -189,6 +189,11 @@ CheckFields.prototype.checkAllFields =
 	};
 
 
+/**
+ * valid colors are 'fld_ok_<lbl|fld>'
+ *                  'fld_err_<lbl|fld>'
+ * and              'fld_part_<lbl|fld>'
+ */
 CheckFields.prototype.colorizeFld =
 	function(fldID, className) {
 		var fld = document.getElementById(fldID);
@@ -202,30 +207,38 @@ CheckFields.prototype.colorizeLbl =
 		lbl.setAttribute('class', className);
 	};
 
-var dbgOld = '';
 
-CheckFields.prototype.handleSingleField =
-	function (currentField, currentLbl, activeFieldID) {
-		var okFctName = this.fieldList[currentField]['testFieldFct'];
-		var fld = document.getElementById(currentField);
-		var fldValue = fld.value;
-		fldValue = fldValue.replace(/\\/g, '\\\\');
-		fldValue = fldValue.replace(/"/g, '\\"');
-		//		var okFct = okFctName + '("' + fldValue + '")';
-		//		var debugS = '\\"Hallo\\"';
-		if(dbgOld != fldValue && ("" != fldValue)) {
-			//window.alert(fldValue);
-			dbgOld = fldValue;
-		}
-		var okFct = okFctName + '("' + fldValue + '")';
-		var resultState = eval(okFct);
-		var apString = 'passive';
-		if(currentField == activeFieldID) {
-			apString = 'active';
-		}
+/**
+ * Some input Value has to be cleaned.
+ * Especially the Appos (") must be replaced,
+ * because the okFct is evaluated.
+ * It must not be possible to end the argument to the
+ * ocFunction (eg. IS_EMAIL("") by simply entering an
+ * appos; or even more [ ... "); whatever_evil_code(); ...].
+ * In this security sense, each appostrophe is replaced by \".
+ */
+CheckFields.prototype.cleanAppos =
+	function(fldValue) {
+		var cleanedValue
+		cleanedValue = fldValue    .replace(/\\/g, '\\\\' );
+		cleanedValue = cleanedValue.replace(/"/g , '\\"'  );
+		return cleanedValue;
+	};
+
+
+/**
+ * Colorize the field an labels.
+ * In addition, missing or not finished (PART) values are
+ * stored in the fieldList. More precise: This function returns
+ * the visiualized name of a field.
+ * If the field is correct (passes the test), then an
+ * empty string ('') is returned.
+ */
+CheckFields.prototype.colorizeFldAndLbl =
+	function(resultState, currentField, currentLbl, apString) {
 		if("OK" == resultState) {
-			this.colorizeFld(currentField, apString + " fc_ok_fld");
-			this.colorizeLbl(currentLbl  ,             "fc_ok_lbl");
+			this.colorizeFld(currentField, apString + " fc_ok_fld" );
+			this.colorizeLbl(currentLbl  ,             "fc_ok_lbl" );
 		}
 		if("ERR" == resultState) {
 			this.colorizeFld(currentField, apString + " fc_err_fld");
@@ -241,6 +254,22 @@ CheckFields.prototype.handleSingleField =
 	};
 
 
+CheckFields.prototype.handleSingleField =
+	function (currentField, currentLbl, activeFieldID) {
+		var okFctName   = this.fieldList[currentField]['testFieldFct'];
+		var fld         = document.getElementById(currentField)       ;
+		var fldValue    = this.cleanAppos(fld.value)                  ;
+
+		var okFct       = okFctName + '("' + fldValue + '")'          ;
+		var resultState = eval(okFct)                                 ;
+		var apString    = 'passive'                                   ;
+		if(currentField == activeFieldID) {
+			apString = 'active';
+		}
+		return this.colorizeFldAndLbl(resultState, currentField, currentLbl, apString);
+	};
+
+
 CheckFields.prototype.registerListeners =
 	function(field) {
 		var ele = document.getElementById(field.fieldID);
@@ -251,4 +280,3 @@ CheckFields.prototype.registerListeners =
 		ele.setAttribute('onchange', fctName);
 		ele.setAttribute('onfocus' , fctName);
 	};
-
