@@ -166,7 +166,12 @@ CheckFields.prototype.checkAllFields =
 		if("" != evt) {
 			if(evt.type != 'paste') {
 				console.log("event" + evt + " type:" + evt.type);
-				id = evt.originalTarget.id;
+				/**
+				 * Danke N. Péray: Chrome kennt originalTarget nicht,
+				 * Daher target, statt Firefox "originalTarget".
+				 */
+				//id = evt.originalTarget.id;
+				id = evt.target.id;
 			} else {
 				// Problem: paste-Event wird geworfen, BEVOR der Text im Feld
 				// eingetragen wird. Mit SetTimeout 20 (20ms) ist der Text danach aber
