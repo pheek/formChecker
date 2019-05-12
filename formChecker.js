@@ -40,6 +40,24 @@ function REQUIRED(fldValue) {
 	return "OK";
 }
 
+
+function IS_INTEGER(fldValue) {
+	var trimmed = fldValue.trim();
+	if("" == trimmed) {
+		return ("ERR");
+	}
+	if("-" == trimmed) {
+		return("PART");
+	}
+	if("+" == trimmed) {
+		return("PART");
+	}
+	if(trimmed * 1 == trimmed) {
+		return("OK");
+	}
+	return ("ERR");
+}
+
 /**
  * Teste ob E-Mailadresse im gültigem Format
  * -----------------------------------------
