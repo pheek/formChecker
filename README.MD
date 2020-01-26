@@ -14,3 +14,5 @@ Der Entwickler muss nur noch die Feld-IDs registrieren und die
 Spezialfunktionen für den Inhalt zur Verfügung stellen, welche
 prüfen, ob ein Inhalt korretk ist.
 In der Datei "ortPlzChecker.js" ist dazu ein einfaches Beispiel.
+
+Weiterer Vorteil: Dieses Programm ist komplett Microsoft-Frei und läuft in allen Javascript Kompatiblen Browsern.
