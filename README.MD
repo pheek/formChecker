@@ -10,6 +10,10 @@ Der Formular-Checker übernimmt
  * das "disablen" des Submit und
  * das Anzeigen einer Fehlermeldung bei fehlenden Feldern.
 
+eg
+![Beispielbild](example.png)
+
+
 Der Entwickler muss nur noch die Feld-IDs registrieren und die
 Spezialfunktionen für den Inhalt zur Verfügung stellen, welche
 prüfen, ob ein Inhalt korretk ist.
