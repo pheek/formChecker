@@ -10,7 +10,8 @@ Der Formular-Checker übernimmt
  * das "disablen" des Submit und
  * das Anzeigen einer Fehlermeldung bei fehlenden Feldern.
 
-eg
+Beispiel eines teilweise ausgefüllten Formulares. Der User sieht sofort, was noch fehlt oder fehlerhaft ist.
+
 ![Beispielbild](example.png)
 
 
